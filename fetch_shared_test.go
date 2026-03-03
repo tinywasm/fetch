@@ -5,7 +5,12 @@ import (
 	"time"
 
 	"github.com/tinywasm/fetch"
+	"github.com/tinywasm/json"
 )
+
+type JSONData struct {
+	Message string `json:"message"`
+}
 
 func SendRequest_GetShared(t *testing.T, baseURL string) {
 	done := make(chan bool)
@@ -33,18 +38,24 @@ func SendRequest_GetShared(t *testing.T, baseURL string) {
 
 func SendRequest_PostJSONShared(t *testing.T, baseURL string) {
 	done := make(chan bool)
-	requestData := `{"message":"hello"}`
-	var responseBody string
+	requestData := JSONData{Message: "hello"}
+	var encodedData []byte
+	if err := json.Encode(requestData, &encodedData); err != nil {
+		t.Fatalf("Failed to encode json: %v", err)
+	}
+	var responseData JSONData
 	var responseErr error
 
 	fetch.Post(baseURL + "/post_json").
 		ContentTypeJSON().
-		Body([]byte(requestData)).
+		Body(encodedData).
 		Send(func(resp *fetch.Response, err error) {
 			if err != nil {
 				responseErr = err
 			} else {
-				responseBody = resp.Text()
+				if err := json.Decode(resp.Body(), &responseData); err != nil {
+					responseErr = err
+				}
 			}
 			done <- true
 		})
@@ -55,13 +66,8 @@ func SendRequest_PostJSONShared(t *testing.T, baseURL string) {
 		t.Fatalf("Expected no error, got %v", responseErr)
 	}
 	// The server should reflect the JSON we sent.
-	// Since we are sending raw bytes, we expect exact match if server behaves simply,
-	// but JSON serialization might slightly differ in spacing if we used a library.
-	// Here we used a string literal, and server likely decodes/encodes.
-	// Let's assume the server returns `{"message":"hello"}`.
-	expected := `{"message":"hello"}`
-	if responseBody != expected {
-		t.Errorf("Expected body '%s', got '%s'", expected, responseBody)
+	if responseData.Message != "hello" {
+		t.Errorf("Expected body '%s', got '%s'", requestData.Message, responseData.Message)
 	}
 }
 
