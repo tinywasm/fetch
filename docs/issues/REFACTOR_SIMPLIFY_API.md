@@ -182,4 +182,4 @@ This is a complete API rewrite. All existing code using this library must be upd
 - Remove `client := fg.NewClient(...)` pattern
 - Replace `client.SendJSON()` with `fetch.Post().Body(encodedData).Send()`
 - Replace `client.SendBinary()` with `fetch.Post().Body(encodedData).Send()`
-- User must encode/decode data manually using `tinywasm/json` or `tinywasm/binary`
+- User must encode/decode data manually using `github.com/tinywasm/json`
