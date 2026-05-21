@@ -39,6 +39,9 @@ Executes the request and sends the response to the global handler.
 
 ## Response
 
+### `func NewResponse(status int, headers []Header, body []byte) *Response`
+Constructs a usable Response.
+
 ### `type Response struct`
 - `Status int`: HTTP status code
 - `Headers []Header`: Response headers

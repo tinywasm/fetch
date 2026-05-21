@@ -29,6 +29,20 @@ type Response struct {
 	body       []byte
 }
 
+// NewResponse constructs a usable Response (e.g. from a Service Worker
+// handler responding to an intercepted FetchEvent).
+//
+//	status  - HTTP status code (200, 404, ...).
+//	headers - Response headers ({Key, Value}).
+//	body    - Raw serialized body.
+func NewResponse(status int, headers []Header, body []byte) *Response {
+	return &Response{
+		Status:  status,
+		Headers: headers,
+		body:    body,
+	}
+}
+
 // Get creates a new GET request.
 func Get(endpoint any) *Request {
 	return &Request{method: "GET", endpoint: endpoint}
