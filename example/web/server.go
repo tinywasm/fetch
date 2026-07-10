@@ -32,7 +32,7 @@ func main() {
 	if *port == "" {
 		*port = os.Getenv("PORT")
 		if *port == "" {
-			*port = "6060"
+			*port = "8080"
 		}
 	}
 

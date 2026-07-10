@@ -18,7 +18,7 @@ Assuming you have the `golite` environment set up:
     golite
     ```
 
-2.  Open your browser at the provided URL (usually `http://localhost:6060`).
+2.  Open your browser at the provided URL (usually `http://localhost:8080`).
 
 3.  Click the "Send User Data" button to trigger the binary request.
 
